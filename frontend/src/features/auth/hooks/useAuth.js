@@ -41,21 +41,5 @@ export function useAuth() {
         }
     }
 
-    // async function handleGetMe() {
-    //     try {
-    //         dispatch(setLoading(true));
-
-    //         const data = await getMe();
-
-    //         dispatch(setUser(data.user));
-    //     } catch (error) {
-    //         dispatch(
-    //             setError(error.response?.data?.message || "Failed to fetch data")
-    //         );
-    //     } finally {
-    //         dispatch(setLoading(false));
-    //     }
-    // }
-
     return { handleLogin ,handleRegister};
 }
