@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setError } from '../auth.slice';
 
 import '../styles/Login.scss';
 
@@ -9,7 +10,9 @@ const Login = () => {
   const { handleLogin } = useAuth();
   const user = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.auth.loading);
+  const error = useSelector((state) => state.auth.error);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // ✅ Must be in useEffect — never call navigate() during render
   useEffect(() => {
@@ -24,6 +27,7 @@ const Login = () => {
   });
 
   const handleChange = (e) => {
+    if (error) dispatch(setError(null));
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -31,8 +35,10 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Login attempt:', formData);
-    await handleLogin(formData);
-    navigate('/');
+    const result = await handleLogin(formData);
+    if (result && result.success) {
+      navigate('/');
+    }
   };
 
   return (
@@ -43,6 +49,8 @@ const Login = () => {
             <h1>Welcome Back</h1>
             <p>Sign in to continue your journey</p>
           </div>
+          
+          {error && <div className="error-message" style={{color: 'red', textAlign: 'center', marginBottom: '1rem'}}>{error}</div>}
 
           <form onSubmit={handleSubmit} className="login-form">
             <div className="form-group">
