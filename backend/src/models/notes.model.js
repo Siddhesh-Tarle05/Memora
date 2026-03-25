@@ -7,7 +7,8 @@ const noteSchema = new mongoose.Schema({
   title: { type: String },
   text: { type: String, required: true },
   tags: { type: [String], default: [] },
-  topic: { type: String }
+  topic: { type: String },
+  isHighlight: { type: Boolean, default: false }
 });
 const  notesModel=mongoose.model("Note", noteSchema);
 

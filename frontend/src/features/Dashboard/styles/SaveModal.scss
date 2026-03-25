@@ -1,6 +1,5 @@
 @use './variables' as *;
 
-
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -16,7 +15,7 @@
 
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
 .modal-card {
@@ -38,31 +37,22 @@
 
   @keyframes slideUp {
     from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    to   { transform: translateY(0);    opacity: 1; }
   }
 
+  // ===== HEADER =====
   .modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
 
     .modal-title-row {
       display: flex;
       align-items: center;
       gap: 10px;
-
-      .modal-icon {
-        font-size: 20px;
-        color: #6d28d9;
-      }
-
-      h2 {
-        font-size: 20px;
-        font-weight: 700;
-        color: $text-primary;
-        margin: 0;
-      }
+      .modal-icon { font-size: 20px; color: #6d28d9; }
+      h2 { font-size: 20px; font-weight: 700; color: $text-primary; margin: 0; }
     }
 
     .modal-close {
@@ -82,16 +72,55 @@
     }
   }
 
+  // ===== TAB TOGGLE =====
+  .modal-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+    background: $bg;
+    border-radius: 10px;
+    padding: 4px;
+
+    .modal-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: $text-secondary;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: $font;
+
+      svg { flex-shrink: 0; }
+      &:hover { background: rgba(255,255,255,0.7); color: $text-primary; }
+
+      &.active {
+        background: #fff;
+        color: #6d28d9;
+        font-weight: 600;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+      }
+    }
+  }
+
   .modal-subtitle {
     font-size: 13px;
     color: $text-secondary;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
+  // ===== FORM =====
   .modal-form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 
     .form-group {
       display: flex;
@@ -119,17 +148,13 @@
           border-color: #8b5cf6;
           box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
         }
-
         &::placeholder { color: $text-muted; }
       }
     }
 
-    .modal-error {
-      font-size: 13px;
-      color: #ef4444;
-      margin: 0;
-    }
+    .modal-error { font-size: 13px; color: #ef4444; margin: 0; }
 
+    // Type hints row
     .modal-types {
       display: flex;
       gap: 8px;
@@ -141,35 +166,111 @@
         padding: 3px 10px;
         border-radius: 20px;
       }
-
       .article-hint { background: #f0fdf4; color: #15803d; }
-      .video-hint { background: #eff6ff; color: #1d4ed8; }
-      .tweet-hint { background: #f5f3ff; color: #6d28d9; }
-      .image-hint { background: #fdf4ff; color: #a21caf; }
-      .pdf-hint { background: #fffbeb; color: #b45309; }
+      .video-hint   { background: #eff6ff; color: #1d4ed8; }
+      .tweet-hint   { background: #f5f3ff; color: #6d28d9; }
+      .image-hint   { background: #fdf4ff; color: #a21caf; }
+      .pdf-hint     { background: #fffbeb; color: #b45309; }
     }
 
+    // ===== PDF DROP ZONE =====
+    .pdf-dropzone {
+      border: 2px dashed $border;
+      border-radius: $radius;
+      padding: 28px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: $bg;
+      min-height: 120px;
+
+      &:hover { border-color: #a78bfa; background: #f5f3ff; }
+
+      &.dragging {
+        border-color: #6d28d9;
+        background: #f5f3ff;
+        box-shadow: 0 0 0 4px rgba(109, 40, 217, 0.10);
+      }
+
+      &.has-file {
+        border-style: solid;
+        border-color: #a78bfa;
+        background: #faf5ff;
+        padding: 16px 20px;
+      }
+
+      .pdf-dropzone-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+        pointer-events: none;
+
+        .pdf-drop-icon { font-size: 32px; opacity: 0.5; }
+        p { font-size: 14px; color: $text-secondary; margin: 0; }
+        .pdf-drop-hint { font-size: 12px; color: $text-muted; }
+      }
+
+      .pdf-file-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+
+        .pdf-file-icon { font-size: 28px; flex-shrink: 0; }
+
+        div {
+          flex: 1;
+          min-width: 0;
+          .pdf-file-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: $text-primary;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          .pdf-file-size { font-size: 12px; color: $text-muted; margin: 2px 0 0; }
+        }
+
+        .pdf-remove-btn {
+          flex-shrink: 0;
+          background: #fee2e2;
+          border: none;
+          color: #ef4444;
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          font-size: 12px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.15s;
+          &:hover { background: #fca5a5; }
+        }
+      }
+    }
+
+    // ===== SAVE BUTTON =====
     .save-btn {
       padding: 14px;
       background: linear-gradient(135deg, #6d28d9, #4c1d95);
       color: #fff;
       border: none;
       border-radius: $radius-sm;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       cursor: pointer;
       transition: opacity 0.15s, transform 0.15s;
       font-family: $font;
 
-      &:hover:not(:disabled) {
-        opacity: 0.92;
-        transform: translateY(-1px);
-      }
-
-      &:disabled {
-        opacity: 0.65;
-        cursor: not-allowed;
-      }
+      &:hover:not(:disabled) { opacity: 0.92; transform: translateY(-1px); }
+      &:disabled  { opacity: 0.55; cursor: not-allowed; }
 
       .spinner-row {
         display: inline-flex;
@@ -189,6 +290,4 @@
   }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }

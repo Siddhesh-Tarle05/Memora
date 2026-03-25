@@ -1,4 +1,5 @@
 import React from 'react';
+import HighlightButton from './HighlightButton';
 import '../styles/ImageCard.scss';
 
 
@@ -12,6 +13,7 @@ const ImageCard = ({ note }) => {
 
   return (
     <div className="image-card" onClick={() => url && window.open(url, '_blank')}>
+      <HighlightButton noteId={note._id} initialIsHighlight={note.isHighlight} />
       <div className="image-wrap">
         <img src={url} alt={title || 'Image'} className="note-image" />
         <div className="image-overlay">

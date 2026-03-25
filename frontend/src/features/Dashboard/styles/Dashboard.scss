@@ -39,6 +39,36 @@
     }
   }
 
+  .memory-lane {
+    background: linear-gradient(145deg, rgba(139, 92, 246, 0.05), rgba(76, 29, 149, 0.02));
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 8px;
+
+    .memory-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: #7c3aed;
+
+      h2 {
+        font-size: 17px;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: 0.02em;
+      }
+    }
+
+    .resurfaced-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      align-items: start;
+    }
+  }
+
   .notes-loading {
     display: flex;
     flex-direction: column;

@@ -1,4 +1,5 @@
 import React from 'react';
+import HighlightButton from './HighlightButton';
 import '../styles/PdfCard.scss';
 
 
@@ -13,6 +14,7 @@ const PdfCard = ({ note }) => {
 
   return (
     <div className="pdf-card" onClick={() => url && window.open(url, '_blank')}>
+      <HighlightButton noteId={note._id} initialIsHighlight={note.isHighlight} />
       <div className="card-header">
         <span className="type-badge pdf">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

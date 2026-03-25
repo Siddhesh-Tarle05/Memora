@@ -6,6 +6,7 @@ import Dashboard from './features/Dashboard/pages/Dashboard'
 import CollectionsPage from './features/Dashboard/pages/CollectionsPage'
 import TagsPage from './features/Dashboard/pages/TagsPage'
 import GraphPage from './features/Dashboard/pages/GraphPage'
+import HighlightsPage from './features/Dashboard/pages/HighlightsPage'
 import { getMe } from './features/auth/services/auth.api'
 import { setUser } from './features/auth/auth.slice'
 
@@ -50,6 +51,7 @@ const App = () => {
       <Route path="/graph" element={<PrivateRoute><GraphPage /></PrivateRoute>} />
       <Route path="/collections" element={<PrivateRoute><CollectionsPage /></PrivateRoute>} />
       <Route path="/tags" element={<PrivateRoute><TagsPage /></PrivateRoute>} />
+      <Route path="/highlights" element={<PrivateRoute><HighlightsPage /></PrivateRoute>} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   )

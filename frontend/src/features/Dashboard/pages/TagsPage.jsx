@@ -52,8 +52,9 @@ const TagsPage = () => {
   const tagNotes = selectedTag ? tagMap[selectedTag]?.notes || [] : [];
 
   const handleSave = async (data) => {
+    if (data?._pdfUploaded) { setShowModal(false); load(); return; }
     setIsSaving(true);
-    try { await handleSaveNote(data); setShowModal(false); }
+    try { await handleSaveNote(data); setShowModal(false); load(); }
     finally { setIsSaving(false); }
   };
 

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import mongoose from 'mongoose';
 import jsdom from 'jsdom';
 const { JSDOM } = jsdom;
 import pkgr from '@mozilla/readability';
@@ -9,6 +10,7 @@ const pdf = require("pdf-parse");
 import ytdl from 'ytdl-core';
 import fetch from "node-fetch";
 import fs from "fs";
+import imagekit from '../config/imagekit.js';
 
 import notesModel from '../models/notes.model.js';
 import {generateTags,extractTagsFromQuery,generateCollectionName,generateTopic} from '../services/Ai.service.js';
@@ -640,4 +642,159 @@ async function deleteNoteController(req, res) {
   }
 }
 
-export default {saveNoteController,searchNotesController,generateCollectionsController,getAllNotesController,getAllCollectionsController,deleteNoteController, getGraphController}
+async function uploadPdfController(req, res) {
+  try {
+    const { userId } = req.user;
+
+    if (!req.file) {
+      return res.status(400).json({ error: 'No PDF file provided' });
+    }
+
+    const buffer = req.file.buffer;
+    const originalName = req.file.originalname || 'upload.pdf';
+    const customTitle = req.body.title?.trim() || '';
+
+    // 1️⃣ Upload to ImageKit
+    const uploadResponse = await new Promise((resolve, reject) => {
+      imagekit.upload(
+        {
+          file: buffer,
+          fileName: `${Date.now()}_${originalName}`,
+          folder: '/memora/pdfs',
+          useUniqueFileName: true,
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+    });
+
+    const pdfUrl = uploadResponse.url;
+    console.log('✅ ImageKit upload:', pdfUrl);
+
+    // 2️⃣ Extract text from buffer
+    let pdfText = '';
+    let pdfTitle = customTitle;
+    try {
+      const parsed = await pdf(buffer);
+      pdfText = parsed.text || '';
+      if (!pdfTitle) {
+        pdfTitle = parsed.info?.Title || originalName.replace('.pdf', '');
+      }
+    } catch (e) {
+      console.warn('PDF text extraction failed, using filename as fallback:', e.message);
+      pdfText = `PDF document: ${originalName}`;
+      if (!pdfTitle) pdfTitle = originalName.replace('.pdf', '');
+    }
+
+    // 3️⃣ AI tags + topic
+    const tags = await generateTags(pdfText, pdfTitle);
+    const topic = await generateTopic(pdfText, pdfTitle);
+
+    // 4️⃣ Save to MongoDB
+    const note = await notesModel.create({
+      userId,
+      url: pdfUrl,
+      type: 'pdf',
+      title: pdfTitle,
+      text: pdfText,
+      tags,
+      topic,
+    });
+    const noteId = note._id.toString();
+
+    // 5️⃣ Save embeddings in ChromaDB
+    const chunks = chunkText(pdfText, 500);
+    const collection = await client.getOrCreateCollection({ name: 'notes' });
+    for (let i = 0; i < chunks.length; i++) {
+      const emb = await generateEmbedding(chunks[i]);
+      await collection.add({
+        ids: [`${noteId}-${i}`],
+        embeddings: [emb],
+        metadatas: [{ userId, url: pdfUrl, type: 'pdf', title: pdfTitle, chunkIndex: i, tags, topic }],
+      });
+    }
+
+    console.log('✅ PDF note saved:', pdfTitle);
+    res.json({ success: true, message: 'PDF saved successfully', noteId });
+  } catch (err) {
+    console.error('❌ PDF Upload Error:', err.message);
+    res.status(500).json({ error: 'Failed to upload PDF', details: err.message });
+  }
+}
+
+// --- Highlights & Memory Resurfacing ---
+
+async function toggleHighlightController(req, res) {
+  const { id } = req.params;
+  const { userId } = req.user;
+  
+  try {
+    const note = await notesModel.findOne({ _id: id, userId });
+    if (!note) {
+      return res.status(404).json({ error: 'Note not found or not authorized' });
+    }
+    
+    // Toggle the boolean
+    note.isHighlight = !note.isHighlight;
+    await note.save();
+    
+    res.status(200).json({ success: true, isHighlight: note.isHighlight, message: 'Highlight toggled successfully' });
+  } catch (err) {
+    console.error('❌ Toggle Highlight Error:', err.message);
+    res.status(500).json({ error: 'Failed to toggle highlight' });
+  }
+}
+
+async function getHighlightedNotesController(req, res) {
+  const { userId } = req.user;
+  try {
+    const notes = await notesModel.find({ userId, isHighlight: true });
+    res.status(200).json({
+      message: "Highlighted notes fetched successfully",
+      notes
+    });
+  } catch (err) {
+    console.error('❌ Get Highlights Error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch highlighted notes' });
+  }
+}
+
+async function getResurfacedNotesController(req, res) {
+  const { userId } = req.user;
+  try {
+    // Generate an ObjectId for 7 days ago to filter out recent notes
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const hexSeconds = Math.floor(sevenDaysAgo.getTime() / 1000).toString(16);
+    const objectIdForSevenDaysAgo = new mongoose.Types.ObjectId(hexSeconds + "0000000000000000");
+
+    // We want to fetch ~3 random older notes for the "Memory Lane" feature
+    const notes = await notesModel.aggregate([
+      { $match: { userId: userId, _id: { $lt: objectIdForSevenDaysAgo } } },
+      { $sample: { size: 3 } }
+    ]);
+    
+    res.status(200).json({
+      message: "Resurfaced notes fetched successfully",
+      notes
+    });
+  } catch (err) {
+    console.error('❌ Get Resurfaced Error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch resurfaced notes' });
+  }
+}
+
+export default {
+  saveNoteController,
+  searchNotesController,
+  generateCollectionsController,
+  getAllNotesController,
+  getAllCollectionsController,
+  deleteNoteController,
+  getGraphController,
+  uploadPdfController,
+  toggleHighlightController,
+  getHighlightedNotesController,
+  getResurfacedNotesController
+};

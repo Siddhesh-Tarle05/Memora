@@ -1,0 +1,49 @@
+@use './variables' as *;
+
+.highlight-btn {
+  background: transparent;
+  border: none;
+  color: $text-muted;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
+
+  &:hover {
+    color: #fbbf24; // Amber color for hover
+    background: rgba(255, 255, 255, 0.95);
+    transform: scale(1.1);
+  }
+
+  &.active {
+    color: #f59e0b; // Amber color for active
+    
+    // Add a tiny drop shadow to the active star for extra pop
+    svg {
+      filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.3));
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+// Dark mode adjustments (if relevant, though Memora is mostly light mode)
+@media (prefers-color-scheme: dark) {
+  .highlight-btn {
+    background: rgba(0, 0, 0, 0.3);
+    &:hover { background: rgba(0, 0, 0, 0.6); }
+  }
+}

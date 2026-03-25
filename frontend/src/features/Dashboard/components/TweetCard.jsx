@@ -1,4 +1,5 @@
 import React from 'react';
+import HighlightButton from './HighlightButton';
 import '../styles/TweetCard.scss';
 
 
@@ -8,6 +9,7 @@ const TweetCard = ({ note }) => {
 
   return (
     <div className="tweet-card" onClick={() => url && window.open(url, '_blank')}>
+      <HighlightButton noteId={note._id} initialIsHighlight={note.isHighlight} />
       <div className="card-header">
         <span className="type-badge tweet">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">

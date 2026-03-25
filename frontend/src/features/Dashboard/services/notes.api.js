@@ -34,3 +34,28 @@ export async function getGraphData() {
   const response = await Api.get('/getgraph');
   return response.data;
 }
+
+export async function uploadPdfNote(file, title) {
+  const formData = new FormData();
+  formData.append('pdf', file);
+  if (title) formData.append('title', title);
+  const response = await Api.post('/uploadpdf', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return response.data;
+}
+
+export async function toggleNoteHighlight(id) {
+  const response = await Api.patch(`/notes/${id}/highlight`);
+  return response.data;
+}
+
+export async function getHighlightedNotes() {
+  const response = await Api.get('/highlights');
+  return response.data;
+}
+
+export async function getResurfacedNotes() {
+  const response = await Api.get('/resurface');
+  return response.data;
+}
