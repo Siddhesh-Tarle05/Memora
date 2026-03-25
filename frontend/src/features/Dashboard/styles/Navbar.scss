@@ -1,0 +1,143 @@
+@use './variables' as *;
+
+.navbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 20px;
+  border-bottom: 1px solid $border;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  // Hamburger — only shown on mobile
+  .hamburger-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-sm;
+    border: 1.5px solid $border;
+    background: #fff;
+    color: $text-secondary;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    &:hover { background: $bg; color: $text-primary; }
+  }
+
+  .search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: $bg;
+    border: 1.5px solid $border;
+    border-radius: 30px;
+    padding: 9px 16px;
+    flex: 1;
+    max-width: 480px;
+    min-width: 0;
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &:focus-within {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.10);
+      background: #fff;
+    }
+
+    .search-icon {
+      color: $text-muted;
+      flex-shrink: 0;
+    }
+
+    .search-input {
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      color: $text-primary;
+      outline: none;
+      width: 100%;
+      min-width: 0;
+      font-family: $font;
+
+      &::placeholder { color: $text-muted; }
+    }
+  }
+
+  .navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid $border;
+      background: #fff;
+      color: $text-secondary;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+
+      &:hover {
+        background: $bg;
+        color: $text-primary;
+      }
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  }
+
+  // ===== TABLET =====
+  @media (max-width: 1024px) {
+    padding: 0 16px;
+    .search-wrapper { max-width: 340px; }
+  }
+
+  // ===== MOBILE =====
+  @media (max-width: 768px) {
+    padding: 0 14px;
+
+    .hamburger-btn {
+      display: flex;
+    }
+
+    .search-wrapper {
+      max-width: none; // fill remaining space
+    }
+
+    // Hide the non-essential icon buttons on very small screens
+    .navbar-actions .icon-btn {
+      display: none;
+    }
+    // But always keep the avatar
+    .navbar-actions .user-avatar {
+      display: flex;
+    }
+  }
+
+  @media (max-width: 400px) {
+    gap: 8px;
+    padding: 0 10px;
+  }
+}

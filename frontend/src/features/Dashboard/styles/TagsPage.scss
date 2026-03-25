@@ -1,0 +1,143 @@
+.tags-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  @media (max-width: 768px) { gap: 20px; }
+}
+
+.tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 20px;
+  background: #fff;
+  border: 1.5px solid #e8e6e1;
+  border-radius: 14px;
+
+  @media (max-width: 480px) { padding: 14px; gap: 8px; }
+
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1.5px solid #e8e6e1;
+    background: #fff;
+    color: #374151;
+    font-size: calc(11px + var(--count, 1) * 1.2px);
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.15s;
+
+    @media (max-width: 480px) { padding: 6px 12px; }
+
+    &:hover {
+      background: #f5f3ff;
+      border-color: #a78bfa;
+      color: #6d28d9;
+    }
+
+    .tag-count {
+      font-size: 12px;
+      background: #f3f4f6;
+      color: #9ca3af;
+      padding: 1px 7px;
+      border-radius: 20px;
+    }
+  }
+}
+
+.tags-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .tag-row {
+    background: #fff;
+    border: 1.5px solid #e8e6e1;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-wrap: wrap;
+
+    @media (max-width: 600px) {
+      padding: 12px 14px;
+      gap: 10px;
+    }
+
+    &:hover {
+      border-color: #a78bfa;
+      box-shadow: 0 4px 16px rgba(109,40,217,0.07);
+    }
+
+    .tag-row-info {
+      min-width: 160px;
+      flex-shrink: 0;
+
+      @media (max-width: 480px) {
+        min-width: unset;
+        width: 100%;
+      }
+
+      .tag-row-name {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a1a2e;
+      }
+
+      .tag-row-count {
+        font-size: 12px;
+        color: #9ca3af;
+      }
+    }
+
+    .tag-row-previews {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-width: 0;
+
+      @media (max-width: 480px) { display: none; } // hide previews on tiny screens
+
+      .tag-preview-chip {
+        font-size: 12px;
+        color: #6b7280;
+        background: #f7f6f3;
+        border: 1px solid #e8e6e1;
+        padding: 2px 10px;
+        border-radius: 20px;
+        max-width: 140px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .tag-preview-more {
+        font-size: 12px;
+        color: #9ca3af;
+        padding: 2px 6px;
+      }
+    }
+
+    .tag-row-arrow {
+      font-size: 16px;
+      color: #9ca3af;
+      flex-shrink: 0;
+      transition: transform 0.15s, color 0.15s;
+    }
+
+    &:hover .tag-row-arrow {
+      transform: translateX(4px);
+      color: #6d28d9;
+    }
+  }
+}

@@ -1,0 +1,61 @@
+@use './variables' as *;
+
+
+.pdf-card {
+  @include card-base;
+  border-left: 4px solid $amber;
+
+  .card-header {
+    @include card-header;
+  }
+
+  .type-badge.pdf {
+    @include type-badge-base;
+    color: darken($amber, 15%);
+    background: $amber-light;
+    border: 1px solid $amber-border;
+  }
+
+  .pdf-icon-area {
+    display: flex;
+    justify-content: center;
+    padding: 12px 0;
+
+    .pdf-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: $amber-light;
+      border: 1px solid $amber-border;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      color: $amber;
+
+      .pdf-ext {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: darken($amber, 15%);
+      }
+    }
+  }
+
+  .title {
+    @include title-style;
+  }
+
+  .summary {
+    @include summary-style;
+  }
+
+  .card-footer {
+    @include card-footer;
+
+    .tags {
+      @include tags-row;
+    }
+  }
+}

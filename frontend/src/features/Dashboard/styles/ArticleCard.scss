@@ -1,0 +1,45 @@
+@use './variables' as *;
+
+
+.article-card {
+  @include card-base;
+  border-left: 4px solid $green;
+
+  .card-header {
+    @include card-header;
+  }
+
+  .type-badge.article {
+    @include type-badge-base;
+    color: darken($green, 10%);
+    background: $green-light;
+    border: 1px solid $green-border;
+  }
+
+  .title {
+    @include title-style;
+  }
+
+  .summary {
+    @include summary-style;
+  }
+
+  .card-footer {
+    @include card-footer;
+
+    .tags {
+      @include tags-row;
+    }
+
+    .ai-chip {
+      font-size: 10px;
+      font-weight: 600;
+      color: darken($green, 15%);
+      background: $green-light;
+      border: 1px solid $green-border;
+      padding: 3px 9px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+  }
+}
