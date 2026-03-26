@@ -83,4 +83,9 @@ async function logoutController(req, res) {
     })
 }
 
-export { RegisterController, LoginController, getmeController, logoutController };
+async function getTokencontroller(req,res) {
+    const token = req.cookies.token;
+  res.json({ token });
+}
+
+export { RegisterController, LoginController, getmeController, logoutController,getTokencontroller}
