@@ -1,11 +1,11 @@
 import express from 'express';
 const AuthRouter=express.Router();
-import { RegisterController, LoginController ,getmeController, logoutController,getTokencontroller} from '../controllers/auth.controller.js';
+import AuthController from '../controllers/auth.controller.js'
 import { identifyUser } from '../middlewares/auth.middleware.js';
 
-AuthRouter.post('/register', RegisterController)
-AuthRouter.post('/login', LoginController)
-AuthRouter.get('/getme', identifyUser, getmeController)
-AuthRouter.post('/logout', logoutController)
-AuthRouter.get('/api/auth/get-token',getTokencontroller)
+AuthRouter.post('/register',AuthController.RegisterController)
+AuthRouter.post('/login', AuthController.LoginController)
+AuthRouter.get('/getme', identifyUser, AuthController.getmeController)
+AuthRouter.post('/logout', AuthController.logoutController)
+AuthRouter.get('/get-token',AuthController.getTokencontroller)
 export default AuthRouter;

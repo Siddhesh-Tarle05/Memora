@@ -88,4 +88,4 @@ async function getTokencontroller(req,res) {
   res.json({ token });
 }
 
-export { RegisterController, LoginController, getmeController, logoutController,getTokencontroller}
+export default{ RegisterController, LoginController, getmeController, logoutController,getTokencontroller}
