@@ -49,32 +49,7 @@ function isYouTube(url) {
 function isTwitter(url) {
   return /^(https?:\/\/)?(www\.)?(mobile\.)?(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/status\/\d+/.test(url);
 }
-// async function isImage(url) {
-//   // 1️⃣ Quick extension check anywhere in URL
-//   const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".svg"];
-//   if (imageExtensions.some(ext => url.toLowerCase().includes(ext))) return true;
 
-//   // 2️⃣ Try HEAD request
-//   try {
-//     const res = await axios.head(url, { timeout: 5000 });
-//     if (res.headers["content-type"] && res.headers["content-type"].startsWith("image/")) {
-//       return true;
-//     }
-//   } catch (err) {
-//     // Fallback if HEAD fails
-//     try {
-//       const res = await axios.get(url, { responseType: "stream", timeout: 5000 });
-//       if (res.headers["content-type"] && res.headers["content-type"].startsWith("image/")) {
-//         return true;
-//       }
-//     } catch (err2) {
-//       console.error("Error detecting image:", err2.message);
-//       return false;
-//     }
-//   }
-
-//   return false;
-// }
 
 
 async function isImage(url) {
@@ -232,37 +207,6 @@ async function generateEmbedding(text) {
   return embedding.map(v => v / magnitude);
 }
 
-//   try {
-//     const HF_API_TOKEN = process.env.HUGGINGFACE_TOKEN;
-//     const model = "openai/clip-vit-base-patch32"; // free CLIP model
-//     const apiUrl = `https://api-inference.huggingface.co/models/${model}`;
-
-//     const response = await fetch(apiUrl, {
-//       method: "POST",
-//       headers: {
-//         "Authorization": `Bearer ${HF_API_TOKEN}`,
-//         "Content-Type": "application/json"
-//       },
-//       body: JSON.stringify({ inputs: url })
-//     });
-
-//     const embedding = await response.json();
-
-//     if (embedding.error) {
-//       console.error("Hugging Face API Error:", embedding.error);
-//       return null;
-//     }
-
-//     // Normalize vector
-//     const magnitude = Math.sqrt(embedding.reduce((sum, v) => sum + v*v, 0));
-//     return embedding.map(v => v / magnitude);
-
-//   } catch (err) {
-//     console.error("❌ generateImageEmbedding failed:", err.message);
-//     return null;
-//   }
-// }
-// 4️⃣ Save note + embedding
 async function saveNote(userId, url,title,text) {
    let finalText = text;
   let finalTitle = title;
@@ -307,19 +251,7 @@ async function saveNote(userId, url,title,text) {
 
   console.log("Saved note & embeddings:", title);
 }
-// async function saveImage(userId,url,title,text) {
-//   if(title==undefined){
-//     title='image'
-//   }
-//   if(text==undefined){
-//     text=''
-//   }
-//   const tags=["image"]
-//   const topic='image'
-//   const type='image'
-//   const note = await notesModel.create({ userId, url, type, title, text, tags, topic });
-//   return note
-// }
+
 
 
 async function saveImage(userId, url, title, text) {
@@ -435,7 +367,8 @@ async function saveNoteController(req,res) {
   }
 
   try {
-    await saveNote(userId, url,title,text); // call saveNote here
+    await saveNote(userId, url,title,text);
+  
     res.json({ success: true, message: "Note saved and embeddings generated." });
   } catch (err) {
     console.error(err);
@@ -446,6 +379,7 @@ async function saveNoteController(req,res) {
 
 async function generateCollections(userId) {
   const notes = await notesModel.find({ userId });
+  console.log(notes)
   if (!notes || notes.length === 0) return [];
 
   const grouped = {};
