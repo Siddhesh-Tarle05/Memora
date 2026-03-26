@@ -1,6 +1,6 @@
 .register {
   min-height: 100vh;
-  background: #000;
+ color: black;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,7 +40,7 @@
   &__card {
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid black;
     border-radius: 24px;
     padding: 2rem;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
@@ -52,12 +52,12 @@
 
     h1 {
       font-size: 2rem;
-      color: #fff;
+      color: black;
       font-weight: 800;
     }
 
     p {
-      color: #aaa;
+      color: black;
       font-size: 0.9rem;
     }
   }
@@ -74,21 +74,21 @@
     gap: 0.4rem;
 
     label {
-      color: #ccc;
+      color: black;
       font-size: 0.85rem;
     }
 
     input {
       padding: 0.8rem 1rem;
       border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
+      border: 1px solid black;
+      background: white;
+      color: black;
       outline: none;
       transition: 0.3s;
 
       &::placeholder {
-        color: #777;
+        color: black;
       }
 
       &:focus {
@@ -103,7 +103,7 @@
     padding: 0.9rem;
     border: none;
     border-radius: 12px;
-    color: #fff;
+    color: white;
     font-weight: 600;
     cursor: pointer;
     background: linear-gradient(to right, #6d28d9, #4c1d95);
@@ -120,7 +120,7 @@
   &__footer {
     text-align: center;
     margin-top: 1.5rem;
-    color: #aaa;
+    color: black;
     font-size: 0.85rem;
 
     a {

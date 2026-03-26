@@ -17,7 +17,7 @@ const Login = () => {
   // ✅ Must be in useEffect — never call navigate() during render
   useEffect(() => {
     if (!loading && user) {
-      navigate('/');
+      navigate('/dashboard');
     }
   }, [user, loading, navigate]);
 
@@ -37,7 +37,7 @@ const Login = () => {
     console.log('Login attempt:', formData);
     const result = await handleLogin(formData);
     if (result && result.success) {
-      navigate('/');
+      navigate('/dashboard');
     }
   };
 

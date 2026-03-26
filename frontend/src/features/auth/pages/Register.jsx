@@ -27,7 +27,7 @@ const Register = () => {
     e.preventDefault();
     const result = await handleRegister(formData);
     if (result && result.success) {
-      navigate('/');
+      navigate('/dashboard');
     }
   };
 

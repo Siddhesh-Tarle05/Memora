@@ -10,6 +10,7 @@ import HighlightsPage from './features/Dashboard/pages/HighlightsPage'
 import { getMe } from './features/auth/services/auth.api'
 import { setUser } from './features/auth/auth.slice'
 import Register from './features/auth/pages/Register'
+import Landing from './features/Landing/pages/Landing'
 
 // ✅ Synchronous guard — uses <Navigate> component, no useEffect race condition
 const PrivateRoute = ({ children }) => {
@@ -49,7 +50,8 @@ const App = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path='/register' element={<Register/>}/>
-      <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+      <Route path="/" element={<Landing />} />
+      <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
       <Route path="/graph" element={<PrivateRoute><GraphPage /></PrivateRoute>} />
       <Route path="/collections" element={<PrivateRoute><CollectionsPage /></PrivateRoute>} />
       <Route path="/tags" element={<PrivateRoute><TagsPage /></PrivateRoute>} />

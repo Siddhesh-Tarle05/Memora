@@ -33,7 +33,7 @@ const Sidebar = ({ onSaveClick, isOpen, onClose }) => {
 
         <nav className="sidebar-nav">
           <NavLink
-            to="/"
+            to="/dashboard"
             end
             className={({ isActive }) => 'nav-item ' + (isActive ? 'active' : '')}
             onClick={handleNavClick}
