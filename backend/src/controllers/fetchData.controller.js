@@ -30,9 +30,9 @@ const client = new CloudClient({
 const EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L6-v2";
 const HF_EMBED_URL = `https://router.huggingface.co/hf-inference/models/${EMBEDDING_MODEL}/pipeline/feature-extraction`;
 
-// --- Utility Functions ---
 
-// 1️⃣ Detect link type
+
+// 1️ Detect link type
 async function isPDF(url) {
   if (url.toLowerCase().endsWith(".pdf")) return true;
   try {
@@ -49,8 +49,6 @@ function isYouTube(url) {
 function isTwitter(url) {
   return /^(https?:\/\/)?(www\.)?(mobile\.)?(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/status\/\d+/.test(url);
 }
-
-
 
 async function isImage(url) {
   try {
@@ -90,7 +88,7 @@ async function detectLinkType(url) {
 }
 
 
-// 2️⃣ Extract text
+// 2️ Extract text
 async function extractText(url, type) {
     try {
     // ---------- PDF ----------
@@ -186,7 +184,7 @@ function chunkText(text, chunkSize = 500) {
 }
 
 
-// 3️⃣ Generate embedding via Hugging Face
+// 3️ Generate embedding via Hugging Face
 async function generateEmbedding(text) {
   const HF_API_TOKEN = process.env.HUGGINGFACE_TOKEN;
   const res = await axios.post(
@@ -358,25 +356,6 @@ async function searchNotesController(req, res) {
     });
   }
 }
-async function saveNoteController(req,res) {
-   const { url,title,text } = req.body;
-  const{userId} =req.user
-
-  if (!userId || !url) {
-    return res.status(400).json({ error: "userId and url are required" });
-  }
-
-  try {
-    await saveNote(userId, url,title,text);
-  
-    res.json({ success: true, message: "Note saved and embeddings generated." });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to save note" });
-  }
-}
-
-
 async function generateCollections(userId) {
   const notes = await notesModel.find({ userId:new mongoose.Types.ObjectId(userId) });
   console.log(notes)
@@ -422,6 +401,26 @@ async function generateCollections(userId) {
 
   return collections;
 }
+async function saveNoteController(req,res) {
+   const { url,title,text } = req.body;
+  const{userId} =req.user
+
+  if (!userId || !url) {
+    return res.status(400).json({ error: "userId and url are required" });
+  }
+
+  try {
+    await saveNote(userId, url,title,text);
+     await generateCollections(userId);
+    res.json({ success: true, message: "Note saved and embeddings generated." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to save note" });
+  }
+}
+
+
+
 
 // Helper to compute dot product / cosine similarity (vectors are already L2 normalized)
 function cosineSimilarity(vecA, vecB) {
