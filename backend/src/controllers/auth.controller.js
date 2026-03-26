@@ -4,11 +4,12 @@ const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWA
 
 const cookieOptions = {
     httpOnly: true,
-    secure: true, // Always true for cross-site cookies in modern Chrome
-    sameSite: 'none', // Required for cross-site (Vercel -> Railway) and extension support
+    secure: isProduction, // Secure only in production (HTTPS)
+    sameSite: isProduction ? 'none' : 'lax', // None for cross-site prod, Lax for local
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/',
 };
+
 
 
 
@@ -32,6 +33,7 @@ async function RegisterController(req, res) {
     res.cookie('token', token, cookieOptions);
     res.status(201).json({
         message: "user created successfully",
+        token, // Fallback for Brave/extension
         user: {
             _id: user.id,
             email: user.email,
@@ -43,7 +45,7 @@ async function LoginController(req, res) {
     let { email, password } = req.body
     let user = await UserModel.findOne({ email }).select('+password')
     if (!user) {
-        res.status(401).json({
+        return res.status(401).json({
             message: "invalid email or password"
         })
     }
@@ -60,6 +62,7 @@ async function LoginController(req, res) {
     res.cookie('token', token, cookieOptions)
     res.status(201).json({
         message: "user logged in successfully",
+        token, // Fallback for Brave/extension
         user: {
             _id: user.id,
             email: user.email,
@@ -67,6 +70,7 @@ async function LoginController(req, res) {
         }
     })
 }
+
 
 async function getmeController(req, res) {
     let { userId } = req.user
@@ -85,6 +89,7 @@ async function logoutController(req, res) {
 }
 
 function getTokencontroller(req, res) {
+    console.log("Cookies received:", req.cookies); // Diagnostic log
     const token = req.cookies?.token;
     if (!token) return res.status(404).json({ message: "No token found" });
     res.json({ token });
