@@ -3,6 +3,9 @@ import axios from 'axios';
 const Api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/data`,
   withCredentials: true,
+   headers: {
+    "Cache-Control": "no-cache"
+  }
 });
 
 export async function getAllNotes() {
