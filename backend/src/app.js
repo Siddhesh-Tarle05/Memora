@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import fetchDataRouter from './routes/fetchData.routes.js';
 import morgan from 'morgan'
 const app=express()
+app.set('trust proxy', 1); // Trust first proxy (Railway/Vercel)
 app.use(express.json())
 app.use(cookieParser())
 app.use(morgan('dev'))

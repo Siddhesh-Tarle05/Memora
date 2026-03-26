@@ -1,5 +1,17 @@
 import UserModel from "../models/user.model.js";
 import jwt from 'jsonwebtoken';
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT;
+
+const cookieOptions = {
+    httpOnly: true,
+    secure: true, // Always true for cross-site cookies in modern Chrome
+    sameSite: 'none', // Required for cross-site (Vercel -> Railway) and extension support
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: '/',
+};
+
+
+
 async function RegisterController(req, res) {
     let { name, email, password } = req.body
     let UserExits = await UserModel.findOne({ email })
@@ -17,7 +29,7 @@ async function RegisterController(req, res) {
         userId: user._id,
 
     }, process.env.JWT_SECRET)
-    res.cookie('token', token);
+    res.cookie('token', token, cookieOptions);
     res.status(201).json({
         message: "user created successfully",
         user: {
@@ -45,7 +57,7 @@ async function LoginController(req, res) {
         userId: user._id,
 
     }, process.env.JWT_SECRET)
-    res.cookie('token', token)
+    res.cookie('token', token, cookieOptions)
     res.status(201).json({
         message: "user logged in successfully",
         user: {
@@ -55,6 +67,7 @@ async function LoginController(req, res) {
         }
     })
 }
+
 async function getmeController(req, res) {
     let { userId } = req.user
     let user = await UserModel.findById(userId)
@@ -65,7 +78,7 @@ async function getmeController(req, res) {
 }
 
 async function logoutController(req, res) {
-    res.clearCookie('token')
+    res.clearCookie('token', cookieOptions)
     res.status(200).json({
         message: "Successfully logged out"
     })
