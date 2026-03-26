@@ -17,11 +17,7 @@ async function RegisterController(req, res) {
         userId: user._id,
 
     }, process.env.JWT_SECRET)
-    res.cookie('token', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none"
-    });
+    res.cookie('token', token);
     res.status(201).json({
         message: "user created successfully",
         user: {
@@ -49,11 +45,7 @@ async function LoginController(req, res) {
         userId: user._id,
 
     }, process.env.JWT_SECRET)
-    res.cookie('token', token,{
-        httpOnly: true,
-        secure: true,
-        sameSite: "none"
-    })
+    res.cookie('token', token)
     res.status(201).json({
         message: "user logged in successfully",
         user: {
@@ -73,19 +65,16 @@ async function getmeController(req, res) {
 }
 
 async function logoutController(req, res) {
-    res.clearCookie('token', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none'
-    })
+    res.clearCookie('token')
     res.status(200).json({
         message: "Successfully logged out"
     })
 }
 
-async function getTokencontroller(req,res) {
-    const token = req.cookies.token;
-  res.json({ token });
+function getTokencontroller(req, res) {
+    const token = req.cookies?.token;
+    if (!token) return res.status(404).json({ message: "No token found" });
+    res.json({ token });
 }
 
 export default{ RegisterController, LoginController, getmeController, logoutController,getTokencontroller}
