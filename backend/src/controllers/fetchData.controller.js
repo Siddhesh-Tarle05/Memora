@@ -378,7 +378,7 @@ async function saveNoteController(req,res) {
 
 
 async function generateCollections(userId) {
-  const notes = await notesModel.find({ userId });
+  const notes = await notesModel.find({ userId:new mongoose.Types.ObjectId(userId) });
   console.log(notes)
   if (!notes || notes.length === 0) return [];
 
