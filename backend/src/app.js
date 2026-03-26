@@ -12,7 +12,15 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(morgan('dev'))
 app.use(cors({
-    origin: ['http://localhost:5173','https://memora-blue.vercel.app'],
+    origin: function (origin, callback) {
+        const allowedOrigins = ['http://localhost:5173', 'https://memora-blue.vercel.app'];
+        const isExtension = origin && (origin.startsWith('chrome-extension://') || origin.startsWith('moz-extension://'));
+        if (!origin || allowedOrigins.includes(origin) || isExtension) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }))
 app.use("/api/auth",AuthRouter)
